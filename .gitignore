@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+.expect
 /out/
 
 # production

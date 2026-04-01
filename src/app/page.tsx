@@ -1,7 +1,5 @@
+import { ExtractorShell } from "@/components/extractor-shell";
+
 export default function Home() {
-  return (
-    <main>
-      <div>Hello world!</div>
-    </main>
-  );
+  return <ExtractorShell />;
 }

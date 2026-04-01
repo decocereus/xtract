@@ -1,34 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# x-articles
 
-## Getting Started
+Paste a public X post or article URL and get clean, agent-ready markdown in one click.
 
-First, run the development server:
+## Why
+
+Copying bookmarked X posts and long-form articles into an agent workflow is too manual.
+`x-articles` starts as a tiny web app that:
+
+- accepts a public URL
+- extracts the readable content server-side
+- returns markdown, plain text, and JSON
+- keeps the output easy to copy into Codex, Claude, ChatGPT, or any other agent
+
+## Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui
+- Mozilla Readability
+- JSDOM
+- Turndown
+
+## Local Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Current Scope
 
-## Learn More
+- public web article extraction
+- public X post extraction
+- one-click copy for markdown, text, or JSON
+- MIT licensed
 
-To learn more about Next.js, take a look at the following resources:
+## Next Likely Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- improve X-specific extraction coverage
+- add bookmarklet / browser extension flow
+- add a CLI so agents can fetch links directly
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](./LICENSE)
