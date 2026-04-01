@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Newsreader } from "next/font/google";
-import { Agentation } from "agentation";
+// import { Agentation } from "agentation";
 
 import "./globals.css";
 
@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${sans.variable} ${heading.variable} antialiased`}>
         {children}
-        {process.env.NODE_ENV === "development" && <Agentation />}
+        {/*{process.env.NODE_ENV === "development" && <Agentation />}*/}
       </body>
     </html>
   );
