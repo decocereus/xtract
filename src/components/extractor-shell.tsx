@@ -1,15 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, LoaderCircle } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  GitBranch,
+  LoaderCircle,
+} from "lucide-react";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import type {
-  ExtractResponse,
-  ExtractedDocument,
-} from "@/lib/extract/types";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import type { ExtractResponse, ExtractedDocument } from "@/lib/extract/types";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,6 +30,9 @@ const tabs = [
 ] as const;
 
 type TabValue = (typeof tabs)[number]["value"];
+
+const OSS_REPO_URL = "https://github.com/decocereus/xtract";
+const X_PROFILE_URL = "https://x.com/decocereus";
 
 function formatPublishedDate(value?: string) {
   if (!value) {
@@ -116,7 +128,9 @@ export function ExtractorShell() {
       setResult(payload.document);
       setActiveTab("markdown");
     } catch {
-      setError("The extractor could not reach the server. Try again in a moment.");
+      setError(
+        "The extractor could not reach the server. Try again in a moment.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -155,34 +169,84 @@ export function ExtractorShell() {
     >
       <main
         className={cn(
-          "mx-auto flex w-full max-w-4xl flex-col px-5 sm:px-8",
+          "mx-auto flex w-full max-w-5xl flex-col px-5 sm:px-8",
           hasActiveDocument
             ? "min-h-screen py-3 sm:py-4 md:h-full md:max-h-full"
             : "min-h-screen py-6 sm:py-10",
         )}
       >
         <header>
-          <p
-            className={cn(
-              "font-heading leading-none italic tracking-[-0.04em] text-primary transition-[font-size,opacity] duration-300 ease-out",
-              hasActiveDocument ? "text-[2rem] sm:text-[2.2rem]" : "text-[2.4rem] sm:text-[2.8rem]",
-            )}
-          >
-            xarticles
-          </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div
+              className={cn(
+                "flex flex-col",
+                hasActiveDocument ? "gap-1" : "gap-2",
+              )}
+            >
+              <p
+                className={cn(
+                  "font-heading leading-none italic tracking-[-0.04em] text-primary transition-[font-size,opacity] duration-300 ease-out",
+                  hasActiveDocument
+                    ? "text-[2rem] sm:text-[2.2rem]"
+                    : "text-[2.4rem] sm:text-[2.8rem]",
+                )}
+              >
+                xtract
+              </p>
+              <p
+                className={cn(
+                  "max-w-md text-pretty text-sm leading-6 text-muted-foreground transition-[opacity,transform] duration-300 ease-out",
+                  hasActiveDocument
+                    ? "hidden sm:block sm:text-xs"
+                    : "text-sm",
+                )}
+              >
+                Open source extraction for public X posts, X articles, and web
+                links.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+              <a
+                href={X_PROFILE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "h-9 rounded-full px-3 text-foreground/55 transition-colors hover:bg-transparent hover:text-primary dark:text-foreground/52 dark:hover:text-primary",
+                )}
+              >
+                @decocereus
+              </a>
+              <a
+                href={OSS_REPO_URL}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "ink-action h-9 rounded-full border-white/65 bg-background/78 px-3 shadow-sm shadow-black/5 backdrop-blur dark:border-white/[0.08] dark:bg-white/[0.035] dark:text-foreground/88 dark:shadow-black/25 dark:hover:border-primary/30 dark:hover:bg-white/[0.06] dark:hover:text-foreground",
+                )}
+              >
+                <GitBranch className="size-4" />
+                GitHub
+                <ArrowUpRight className="size-3.5 opacity-70" />
+              </a>
+              <ThemeToggle />
+            </div>
+          </div>
         </header>
 
         <section
-          className={cn(
-            "flex flex-1 flex-col min-h-0",
-            hasActiveDocument
-              ? "gap-3 pt-3 sm:gap-4 sm:pt-4"
-              : "gap-8 pt-14 sm:gap-10 sm:pt-20",
-          )}
-        >
+            className={cn(
+              "flex flex-1 flex-col min-h-0",
+              hasActiveDocument
+                ? "gap-3 pt-3 sm:gap-4 sm:pt-4"
+                : "gap-10 pt-16 sm:gap-12 sm:pt-24",
+            )}
+          >
           <div
             className={cn(
-              "flex max-w-2xl flex-col",
+              "flex max-w-3xl flex-col",
               hasActiveDocument ? "gap-1.5" : "gap-4",
             )}
           >
@@ -200,10 +264,8 @@ export function ExtractorShell() {
             </h1>
             <p
               className={cn(
-                "max-w-xl text-muted-foreground transition-[opacity,transform] duration-300 ease-out",
-                hasActiveDocument
-                  ? "hidden"
-                  : "text-base leading-7 sm:text-lg",
+                "max-w-2xl text-pretty text-muted-foreground transition-[opacity,transform] duration-300 ease-out",
+                hasActiveDocument ? "hidden" : "text-base leading-7 sm:text-lg",
               )}
             >
               Posts and long-form X articles, formatted for agents.
@@ -212,25 +274,31 @@ export function ExtractorShell() {
 
           <div
             className={cn(
-              "panel-shell surface-shadow relative isolate flex min-h-0 flex-col overflow-hidden rounded-[1.65rem] border border-white/70 bg-card/92 backdrop-blur",
+              "panel-shell surface-shadow relative isolate flex min-h-0 flex-col overflow-hidden rounded-[1.85rem] border border-white/70 bg-card/92 backdrop-blur dark:border-white/[0.08] dark:bg-card/[0.82]",
               hasActiveDocument ? "flex-1 p-3 sm:p-3.5" : "p-4 sm:p-5",
             )}
           >
-            <form className="relative flex flex-col gap-3" onSubmit={handleSubmit}>
+            <form
+              className="relative flex flex-col gap-3"
+              onSubmit={handleSubmit}
+            >
               <FieldGroup>
-                <Field data-invalid={error ? "true" : undefined} className="gap-2">
+                <Field
+                  data-invalid={error ? "true" : undefined}
+                  className="gap-2"
+                >
                   <FieldLabel htmlFor="url" className="sr-only">
                     X post or X article URL
                   </FieldLabel>
 
-                  <div className="input-shell relative flex flex-col gap-1.5 rounded-[1.2rem] border border-white/65 bg-background/78 p-1.5 sm:flex-row sm:items-center">
+                  <div className="input-shell relative flex flex-col gap-1.5 rounded-[1.3rem] border border-white/65 bg-background/78 p-1.5 dark:border-white/[0.08] dark:bg-black/10 sm:flex-row sm:items-center">
                     <div
                       aria-hidden="true"
                       className="absolute inset-x-5 top-0 h-px bg-linear-to-r from-transparent via-primary/26 to-transparent opacity-90"
                     />
                     <div
                       aria-hidden="true"
-                      className="absolute inset-y-2 right-18 hidden w-16 rounded-full bg-primary/10 blur-2xl sm:block"
+                      className="absolute inset-y-2 right-18 hidden w-16 rounded-full bg-primary/8 blur-2xl sm:block dark:bg-primary/10"
                     />
                     <Input
                       id="url"
@@ -238,7 +306,7 @@ export function ExtractorShell() {
                       value={url}
                       onChange={(event) => setUrl(event.target.value)}
                       placeholder="Paste an X post or X article URL"
-                      className="h-11 rounded-[0.95rem] border-0 bg-transparent px-3 text-[16px] shadow-none transition-[background-color,color] duration-200 ease-out placeholder:text-muted-foreground/80 focus-visible:bg-background/82 focus-visible:ring-0 sm:flex-1"
+                      className="h-11 rounded-[1.05rem] border-0 bg-transparent px-3 text-[16px] shadow-none transition-[background-color,color] duration-200 ease-out placeholder:text-muted-foreground/80 focus-visible:bg-background/82 focus-visible:ring-0 dark:focus-visible:bg-white/[0.03] sm:flex-1"
                       aria-invalid={error ? "true" : undefined}
                     />
 
@@ -246,7 +314,7 @@ export function ExtractorShell() {
                       type="submit"
                       size="sm"
                       disabled={isSubmitting || url.trim().length === 0}
-                      className="h-11 rounded-[0.95rem] px-4 transition-[transform,box-shadow,background-color,opacity] duration-200 ease-out hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/12 sm:min-w-28"
+                      className="h-11 rounded-[1.05rem] px-4 shadow-sm shadow-primary/10 transition-[transform,box-shadow,background-color,opacity] duration-200 ease-out hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/18 sm:min-w-28"
                     >
                       {isSubmitting ? (
                         <>
@@ -281,7 +349,12 @@ export function ExtractorShell() {
                     </h2>
                   </div>
 
-                  <Button type="button" variant="outline" size="sm" onClick={handleCopy}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopy}
+                  >
                     {copiedTab === activeTab ? (
                       <>
                         <Check className="size-4" />
@@ -323,7 +396,7 @@ export function ExtractorShell() {
                         value={tab.value}
                         className="animate-in fade-in slide-in-from-bottom-1 min-h-0 duration-200"
                       >
-                        <div className="soft-outline h-[min(44vh,24rem)] overflow-hidden rounded-[1.25rem] border border-white/70 bg-background/72 transition-[border-color,transform,box-shadow] duration-300 ease-out md:h-full md:min-h-0">
+                        <div className="soft-outline h-[min(44vh,24rem)] overflow-hidden rounded-[1.35rem] border border-white/70 bg-background/72 transition-[border-color,transform,box-shadow] duration-300 ease-out dark:border-white/[0.08] dark:bg-black/10 md:h-full md:min-h-0">
                           <pre className="h-full overflow-auto px-4 py-4 font-mono text-[13px] leading-6 whitespace-pre-wrap break-words text-foreground sm:px-5">
                             {value}
                           </pre>

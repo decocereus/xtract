@@ -166,7 +166,7 @@ async function extractArticle(url: URL) {
         "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.7",
       "Accept-Language": "en-US,en;q=0.8",
       "User-Agent":
-        "x-articles/0.1 (+https://github.com/amartyasingh/x-articles) Mozilla/5.0",
+        "xtract/0.1 (+https://github.com/decocereus/xtract) Mozilla/5.0",
     },
     redirect: "follow",
     cache: "no-store",
@@ -225,7 +225,9 @@ async function extractArticle(url: URL) {
     url: url.toString(),
     canonicalUrl,
     siteName: cleanText(
-      readable.siteName || getMetaContent(document, "og:site_name") || url.hostname,
+      readable.siteName ||
+        getMetaContent(document, "og:site_name") ||
+        url.hostname,
     ),
     byline: optionalText(readable.byline),
     publishedAt: normalizeDate(
@@ -246,7 +248,9 @@ async function extractXContent(url: URL) {
   const restId = getXRestId(url);
 
   if (!restId) {
-    throw new ExtractError("We couldn't identify the X post or article from that URL.");
+    throw new ExtractError(
+      "We couldn't identify the X post or article from that URL.",
+    );
   }
 
   const tweet = await fetchXWebTweetResult(restId, guestToken);
@@ -266,7 +270,8 @@ async function extractXContent(url: URL) {
     const contentText = cleanText(article.plain_text);
     const contentMarkdown = renderXArticleMarkdown(article, contentText);
     const title = cleanText(
-      article.title || (authorHandle ? `Article by @${authorHandle}` : "X article"),
+      article.title ||
+        (authorHandle ? `Article by @${authorHandle}` : "X article"),
     );
 
     return finalizeDocument({
@@ -280,7 +285,9 @@ async function extractXContent(url: URL) {
       siteName: "X",
       byline,
       publishedAt: article.metadata?.first_published_at_secs
-        ? new Date(article.metadata.first_published_at_secs * 1000).toISOString()
+        ? new Date(
+            article.metadata.first_published_at_secs * 1000,
+          ).toISOString()
         : undefined,
       excerpt: optionalText(article.summary_text || article.preview_text),
       contentMarkdown,
@@ -344,7 +351,13 @@ function formatMarkdown(document: ExtractedBase) {
     document.publishedAt ? `Published: ${document.publishedAt}` : null,
   ].filter(Boolean);
 
-  const sections = [`# ${document.title}`, "", ...metadata, "", document.contentMarkdown.trim()];
+  const sections = [
+    `# ${document.title}`,
+    "",
+    ...metadata,
+    "",
+    document.contentMarkdown.trim(),
+  ];
 
   return sections.join("\n");
 }
@@ -442,10 +455,14 @@ function normalizeInputUrl(input: string) {
   const trimmed = input.trim();
 
   if (!trimmed) {
-    throw new ExtractError("Paste a public article or X post URL to extract it.");
+    throw new ExtractError(
+      "Paste a public article or X post URL to extract it.",
+    );
   }
 
-  const withProtocol = /^[a-z]+:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  const withProtocol = /^[a-z]+:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`;
   let url: URL;
 
   try {
@@ -481,7 +498,9 @@ async function assertSafeRemoteTarget(url: URL) {
   try {
     addresses = await lookup(hostname, { all: true, verbatim: true });
   } catch {
-    throw new ExtractError("We couldn't resolve that hostname. Check the URL and try again.");
+    throw new ExtractError(
+      "We couldn't resolve that hostname. Check the URL and try again.",
+    );
   }
 
   if (addresses.some((address) => isPrivateIp(address.address))) {
@@ -705,7 +724,9 @@ function applyInlineStylesToText(
   ranges: Array<{ length: number; offset: number; style: string }>,
 ) {
   let output = value;
-  const sortedRanges = [...ranges].sort((left, right) => right.offset - left.offset);
+  const sortedRanges = [...ranges].sort(
+    (left, right) => right.offset - left.offset,
+  );
 
   for (const range of sortedRanges) {
     const before = output.slice(0, range.offset);
@@ -839,7 +860,9 @@ function getMetaContent(document: Document, property: string) {
 }
 
 function getMetaName(document: Document, name: string) {
-  return document.querySelector(`meta[name="${name}"]`)?.getAttribute("content");
+  return document
+    .querySelector(`meta[name="${name}"]`)
+    ?.getAttribute("content");
 }
 
 function getHandleFromAuthorUrl(authorUrl?: string) {

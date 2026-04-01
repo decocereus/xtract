@@ -1,11 +1,11 @@
-# x-articles
+# xtract
 
 Paste a public X post or article URL and get clean, agent-ready markdown in one click.
 
 ## Why
 
 Copying bookmarked X posts and long-form articles into an agent workflow is too manual.
-`x-articles` starts as a tiny web app that:
+`xtract` starts as a tiny web app that:
 
 - accepts a public URL
 - extracts the readable content server-side
