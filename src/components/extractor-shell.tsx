@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PretextScene } from "@/components/pretext-scene";
 import { cn } from "@/lib/utils";
 import type { ExtractResponse, ExtractedDocument } from "@/lib/extract/types";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -383,11 +384,11 @@ export function ExtractorShell() {
                   </TabsList>
 
                   {tabs.map((tab) => {
-                    const value =
+                    const displayValue =
                       tab.value === "markdown"
-                        ? result.markdown
+                        ? result.contentMarkdown
                         : tab.value === "text"
-                          ? result.plainText
+                          ? result.contentText
                           : getJsonPreview(result);
 
                     return (
@@ -397,9 +398,11 @@ export function ExtractorShell() {
                         className="animate-in fade-in slide-in-from-bottom-1 min-h-0 duration-200"
                       >
                         <div className="soft-outline h-[min(44vh,24rem)] overflow-hidden rounded-[1.35rem] border border-white/70 bg-background/72 transition-[border-color,transform,box-shadow] duration-300 ease-out dark:border-white/[0.08] dark:bg-black/10 md:h-full md:min-h-0">
-                          <pre className="h-full overflow-auto px-4 py-4 font-mono text-[13px] leading-6 whitespace-pre-wrap break-words text-foreground sm:px-5">
-                            {value}
-                          </pre>
+                          <PretextScene
+                            isActive={activeTab === tab.value}
+                            value={displayValue}
+                            variant={tab.value}
+                          />
                         </div>
                       </TabsContent>
                     );

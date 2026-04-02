@@ -7,6 +7,8 @@
 @theme inline {
   --font-heading: var(--font-display);
   --font-sans: var(--font-body);
+  --font-prose: var(--font-manuscript-body);
+  --font-script: var(--font-manuscript-display);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -220,6 +222,16 @@
   }
 }
 
+@keyframes scene-sweep {
+  from {
+    transform: translateX(-24%);
+  }
+
+  to {
+    transform: translateX(24%);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -299,6 +311,366 @@
       0 14px 28px -24px var(--input-hover-shadow-1),
       0 8px 18px -16px var(--input-hover-shadow-2);
   }
+
+  .scene-shell {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 18% 16%, var(--scene-haze), transparent 20rem),
+      linear-gradient(180deg, var(--scene-bg-start), var(--scene-bg-end));
+    color: var(--scene-line);
+  }
+
+  .scene-shell::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(
+        120deg,
+        transparent 0%,
+        color-mix(in oklab, var(--scene-art-glow) 38%, transparent) 50%,
+        transparent 100%
+      );
+    opacity: 0.5;
+    animation: scene-sweep 18s linear infinite alternate;
+  }
+
+  .scene-shell::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background-image:
+      linear-gradient(to right, var(--scene-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--scene-grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(to bottom, black 0%, black 56%, transparent 92%);
+    opacity: 0.48;
+  }
+
+  .scene-viewport {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable both-edges;
+    scrollbar-width: thin;
+    scrollbar-color:
+      color-mix(in oklab, var(--scene-art-glow) 40%, transparent)
+      transparent;
+  }
+
+  .scene-viewport::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+
+  .scene-viewport::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background:
+      color-mix(in oklab, var(--scene-art-glow) 28%, var(--scene-line));
+    background-clip: padding-box;
+  }
+
+  .scene-viewport::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scene-content {
+    position: relative;
+    min-height: 100%;
+    isolation: isolate;
+  }
+
+  .scene-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 84% 14%, var(--scene-art-glow), transparent 16rem),
+      radial-gradient(circle at 14% 34%, var(--scene-haze), transparent 18rem);
+    opacity: 0.88;
+  }
+
+  .scene-meta {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    right: 16px;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .scene-meta-stack {
+    display: flex;
+    max-width: 30rem;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .scene-badge {
+    width: fit-content;
+    border: 1px solid color-mix(in oklab, var(--scene-line) 14%, transparent);
+    border-radius: 999px;
+    background: var(--scene-badge);
+    padding: 0.32rem 0.62rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--scene-line);
+  }
+
+  .scene-kicker {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    color: var(--scene-line-muted);
+    font-size: 0.74rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  .scene-divider {
+    display: inline-flex;
+    width: 1.25rem;
+    height: 1px;
+    background: color-mix(in oklab, var(--scene-line) 18%, transparent);
+  }
+
+  .scene-rubric {
+    width: fit-content;
+    margin: 0 auto;
+    padding-top: 0.15rem;
+    color: var(--scene-accent);
+    font-family: var(--font-script);
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-wrap: pretty;
+  }
+
+  .scene-art {
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    pointer-events: none;
+    color: var(--scene-art-ink);
+    white-space: pre;
+    text-shadow:
+      0 0 22px var(--scene-art-glow),
+      0 0 42px color-mix(in oklab, var(--scene-art-glow) 65%, transparent);
+    opacity: 0.92;
+    font-variant-ligatures: none;
+    letter-spacing: 0;
+    transform-origin: center center;
+  }
+
+  .scene-line {
+    position: absolute;
+    z-index: 2;
+    white-space: pre;
+    color: var(--scene-line);
+    text-wrap: nowrap;
+    user-select: text;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .scene-line--manuscript {
+    letter-spacing: 0.01em;
+    text-wrap: pretty;
+    text-shadow: 0 0 0.01px currentColor;
+  }
+
+  .scene-fallback {
+    min-height: 100%;
+    margin: 0;
+    padding: 1.2rem 1.25rem 1.35rem;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    color: var(--scene-line);
+  }
+
+  .scene-shell--text {
+    background:
+      radial-gradient(circle at 18% 10%, rgb(255 255 255 / 0.16), transparent 20rem),
+      radial-gradient(circle at 78% 24%, color-mix(in oklab, var(--scene-haze) 78%, transparent), transparent 22rem),
+      linear-gradient(180deg, var(--scene-bg-start), var(--scene-bg-end));
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--scene-line) 7%, transparent);
+  }
+
+  .scene-shell--text::before {
+    opacity: 0.24;
+    animation-duration: 26s;
+  }
+
+  .scene-shell--text::after {
+    background-image:
+      radial-gradient(circle at 12% 20%, color-mix(in oklab, var(--scene-line) 5%, transparent) 0 1px, transparent 1px),
+      radial-gradient(circle at 80% 62%, color-mix(in oklab, var(--scene-line) 4%, transparent) 0 1px, transparent 1px);
+    background-size: 34px 34px, 42px 42px;
+    opacity: 0.25;
+  }
+
+  .scene-shell--text .scene-meta {
+    top: 12px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .scene-shell--text .scene-meta-stack {
+    max-width: none;
+    align-items: center;
+  }
+
+  .scene-shell--text .scene-viewport {
+    scrollbar-color:
+      color-mix(in oklab, var(--scene-accent) 28%, transparent)
+      transparent;
+  }
+
+  .scene-shell--text .scene-content {
+    background:
+      radial-gradient(circle at 14% 20%, rgb(255 255 255 / 0.1), transparent 13rem),
+      linear-gradient(180deg, rgb(255 255 255 / 0.03), transparent 20%);
+  }
+
+  .scene-shell--text .scene-overlay {
+    background:
+      radial-gradient(circle at 72% 34%, color-mix(in oklab, var(--scene-accent) 10%, transparent), transparent 16rem),
+      radial-gradient(circle at 16% 78%, color-mix(in oklab, var(--scene-line) 6%, transparent), transparent 14rem);
+    opacity: 0.62;
+  }
+
+  .scene-shell--markdown .scene-content,
+  .scene-shell--json .scene-content {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.02), transparent 26%),
+      radial-gradient(circle at 12% 18%, rgb(255 255 255 / 0.04), transparent 10rem);
+  }
+
+  .scene-shell--markdown .scene-overlay,
+  .scene-shell--json .scene-overlay {
+    opacity: 0.56;
+  }
+
+  .scene-initial {
+    position: absolute;
+    z-index: 5;
+    color: var(--scene-line);
+    line-height: 0.9;
+    filter:
+      drop-shadow(0 2px 0 rgb(255 255 255 / 0.18))
+      drop-shadow(0 10px 20px rgb(0 0 0 / 0.06));
+  }
+
+  .scene-initial::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translate(0.18em, 0.1em) scale(1.03);
+    color: color-mix(in oklab, var(--scene-accent) 85%, transparent);
+    opacity: 0.24;
+    content: attr(data-shadow);
+  }
+
+  .scene-dragon {
+    position: absolute;
+    z-index: 3;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+    color: var(--scene-art-ink);
+    transform-origin: center center;
+    filter:
+      drop-shadow(0 8px 14px rgb(0 0 0 / 0.12))
+      drop-shadow(0 0 12px color-mix(in oklab, var(--scene-art-glow) 14%, transparent));
+  }
+
+  .scene-dragon-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .scene-dragon-body {
+    transform-origin: 52% 56%;
+  }
+
+  .scene-dragon-wing {
+    transform-box: fill-box;
+    transform-origin: center center;
+  }
+
+  .scene-dragon-fire {
+    position: absolute;
+    inset: 0;
+  }
+
+  .scene-dragon-ember {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--scene-accent) 88%, white), color-mix(in oklab, var(--scene-accent) 58%, orange));
+    box-shadow:
+      0 0 8px color-mix(in oklab, var(--scene-accent) 45%, transparent),
+      0 0 16px color-mix(in oklab, var(--scene-art-glow) 30%, transparent);
+    clip-path: polygon(18% 0%, 100% 24%, 76% 100%, 0% 80%);
+  }
+
+  .scene-codex,
+  .scene-core {
+    position: absolute;
+    z-index: 3;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+    color: var(--scene-art-ink);
+    filter:
+      drop-shadow(0 8px 14px rgb(0 0 0 / 0.12))
+      drop-shadow(0 0 10px color-mix(in oklab, var(--scene-art-glow) 18%, transparent));
+  }
+
+  .scene-codex {
+    transform-origin: center center;
+  }
+
+  .scene-codex-svg,
+  .scene-core-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .scene-codex-shell {
+    transform-origin: center center;
+  }
+
+  .scene-codex-glyph {
+    transform-origin: center center;
+  }
+
+  .scene-core {
+    transform-origin: center center;
+  }
+
+  .scene-core-ring {
+    opacity: 0.92;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -326,6 +698,10 @@
   .input-shell:hover,
   .input-shell:focus-within {
     transform: none;
+  }
+
+  .scene-shell::before {
+    animation: none;
   }
 
   .ink-action:hover,

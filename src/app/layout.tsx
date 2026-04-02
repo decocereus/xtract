@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
-import { Instrument_Sans, Newsreader } from "next/font/google";
 // import { Agentation } from "agentation";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  heading,
+  manuscriptBody,
+  manuscriptDisplay,
+  sans,
+} from "@/lib/fonts";
 import {
   APP_DESCRIPTION,
   APP_KEYWORDS,
@@ -12,19 +17,6 @@ import {
 } from "@/lib/site";
 
 import "./globals.css";
-
-const sans = Instrument_Sans({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const heading = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-display",
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = getSiteUrl() ?? (await getRequestSiteUrl());
@@ -103,7 +95,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={`${sans.variable} ${heading.variable} antialiased`}>
+      <body
+        className={`${sans.variable} ${heading.variable} ${manuscriptBody.variable} ${manuscriptDisplay.variable} antialiased`}
+      >
         <ThemeProvider>
           {children}
           {/*{process.env.NODE_ENV === "development" && <Agentation />}*/}
